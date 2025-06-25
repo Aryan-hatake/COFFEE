@@ -37,7 +37,7 @@ export const providerss= NextAuth({
   ],
   callbacks: {
   async signIn({ user, account, profile, email, credentials }) {
-    if (account.provider=="github") {
+    if (account.provider=="github" || account.provider=="google") {
       //Connecting to DB
         await connectDB()
         const currentUser= await User.findOne({email:email})
