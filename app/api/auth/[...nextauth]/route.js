@@ -10,13 +10,13 @@ import Payment from '@/app/models/Payment'
 import connectDB from '@/app/db/connectdb'
 
 
-export const providerss= NextAuth({
+export const providerss = NextAuth({
   providers: [
     // OAuth authentication providers..
-  GitHubProvider({
-    clientId: process.env.GITHUB_ID,
-    clientSecret: process.env.GITHUB_SECRET
-  }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET
+    }),
     // AppleProvider({
     //   clientId: process.env.APPLE_ID,
     //   clientSecret: process.env.APPLE_SECRET
@@ -36,33 +36,43 @@ export const providerss= NextAuth({
     // }),
   ],
   callbacks: {
-  async signIn({ user, account, profile, email, credentials }) {
-    if (account.provider=="github" || account.provider=="google") {
-      //Connecting to DB
-        await connectDB()
-        const currentUser= await User.findOne({email:email})
-        
-        if(!currentUser){
+    async signIn({ user, account, profile, email, credentials }) {
+      if (account.provider == "github" || account.provider == "google") {
+        //Connecting to DB
+        try {
+
+          await connectDB()
+        }
+        catch (err) {
+          console.error("DB connection failed:", err)
+          return false
+        }
+        console.log(user)
+        console.log(account)
+        console.log(email)
+        const currentUser = await User.findOne({ email: user.email })
+
+        if (!currentUser) {
           //create a new user
           const newUser = await User.create({
-            email:user.email,
-            username:user.email.split("@")[0]
+            email: user.email,
+            username: user.email.split("@")[0]
           })
         }
-   
-        return true
-    }
 
-  
+        return true
+      }
+
+
+    }
+    , async session({ session, token, user }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      const dbUser = await User.findOne({ email: session.user.email })
+
+      session.user.name = dbUser.username
+
+      return session
+    }
   }
-   ,async session({ session, token, user }) {
-    // Send properties to the client, like an access_token and user id from a provider.
-    const dbUser= await User.findOne({email:session.user.email})
-   
-    session.user.name=dbUser.username
-    
-    return session
-  }
-}
 })
 export { providerss as GET, providerss as POST };
