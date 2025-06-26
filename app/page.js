@@ -67,7 +67,7 @@ Look more
      <div className="flex justify-center flex-col items-center pb-10">
        <img src="team3.gif" alt="heh" className="h-60" />
   <p className="text-gray-400 font-extrabold text-xl ">
-   Thank you  for sponsoring me a coffee &gt;&qout;&lt;
+   Thank you  for sponsoring me a coffee &gt;&quot;&lt;
     </p>
      </div>
       

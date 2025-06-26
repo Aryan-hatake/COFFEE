@@ -137,7 +137,7 @@ const Paymentpage = ({ username }) => {
                           <img src="avatar.gif" alt="avatar" className='h-10' />
                           <span>
 
-                            {e.name} donated ₹{e.amount / 100} with message &qout;{e.message}&qout;
+                            {e.name} donated ₹{e.amount / 100} with message &quot; {e.message} &quot;
                           </span>
                         </li>
 
